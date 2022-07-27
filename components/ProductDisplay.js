@@ -19,9 +19,7 @@ app.component('product-display', {
                 <p v-else-if="inStock <= 10 && inStock > 0">Almost Sold Out!</p>
                 <p v-else>Out of Stock</p>
                 <p>Shipping: {{ shipping }}</p>
-                <ul>
-                    <li v-for="detail in details">{{ detail }}</li>
-                </ul>
+                <product-details :details="details"> </product-details>
                 <div class="color-circle" :style="{ backgroundColor: variant.color }" v-for="(variant,index) in variants" :key="variant.id" @mouseover="updateVariant(index)"></div>
                 <ul>
                     <li v-for="size in sizes">{{ size }}</li>
