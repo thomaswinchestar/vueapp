@@ -24,14 +24,20 @@ app.component('product-display', {
                 <ul>
                     <li v-for="size in sizes">{{ size }}</li>
                 </ul>
-                <button class="button rounded" @click="decrementCart">
-          Remove
-        </button>
+                <button 
+                    class="button" 
+                    :class="{ disabledButton: !inStock }" 
+                    :disabled="!inStock" 
+                    @click="removeFromCart">
+                    Remove Item
+                  </button>
                 <button class="button" :class="{ disabledButton: !inStock}" :disabled="!inStock" v-on:click="addToCart">
           Add to Cart
         </button>
             </div>
         </div>
+        <review-list v-if="reviews.length"  :reviews="reviews"></review-list>
+        <review-form @review-submitted="addReview"></review-form>
     </div>`,
     data() {
         return {
@@ -45,20 +51,23 @@ app.component('product-display', {
                 { id: 2234, color: 'green', image: './assets/images/socks_green.jpg', quantity: 50 },
                 { id: 2235, color: 'blue', image: './assets/images/socks_blue.jpg', quantity: 0 },
             ],
+            reviews: [],
+            tabs: ['review-form', 'review-list'],
             sizes: ['S', 'M', 'L', 'XL'],
         }
     },
     methods: {
         addToCart() {
-            this.cart += 1;
+            this.$emit('add-to-cart', this.variants[this.selectedVariant].id)
         },
         updateVariant(index) {
             this.selectedVariant = index
         },
-        decrementCart() {
-            if (this.cart >= 1) {
-                this.cart -= 1;
-            }
+        removeFromCart() {
+            this.$emit('remove-from-cart', this.variants[this.selectedVariant].id)
+        },
+        addReview(review) {
+            this.reviews.push(review)
         }
     },
     computed: {
